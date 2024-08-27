@@ -1,0 +1,59 @@
+[
+    {
+        "question": "List the 4 beamforming methods standardized by WG4."
+    },
+    {
+        "question": "What is the fronthaul split standardized by O-RAN? Or what is 7.2-x split?"
+    },
+    {
+        "question": "What are the different categories (CATs) of O-RUs? List them."
+    },
+    {
+        "question": "List the LLS configurations for S-plane."
+    },
+    {
+        "question": "What are the section extension types used for beamforming weight transfer?"
+    },
+    {
+        "question": "What is RIC?"
+    },
+    {
+        "question": "What are xApps and rApps?"
+    },
+    {
+        "question": "How is intelligence embedded in O-RAN architecture?"
+    },
+    {
+        "question": "What is acceleration abstraction layer?"
+    },
+    {
+        "question": "How O-RAN enables hardware and software disaggregation through AAL?"
+    },
+    {
+        "question": "What are the AAL APIs?"
+    },
+    {
+        "question": "What is an LPU?"
+    },
+    {
+        "question": "What are the open interfaces in O-RAN architecture?"
+    },
+    {
+        "question": "List the network functions in O-RAN architecture."
+    },
+    {
+        "question": "How is energy efficiency enabled by O-RAN?"
+    },
+    {
+        "question": "Is open RAN secured?"
+    },
+    {
+        "question": "How O-RAN mitigates security risks?"
+    },
+    {
+        "question": "How O-RAN enables interoperability?"
+    },
+    {
+        "question": "How O-RAN enables network slicing?"
+    }
+]
