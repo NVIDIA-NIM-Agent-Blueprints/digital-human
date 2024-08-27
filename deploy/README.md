@@ -48,7 +48,9 @@ Modify the `secrets.sh` file with the AWS Access keys and other necessary secret
     export _ssh_public_key='<your_ssh_public_key>'
    ```
 
-The `_openai_api_key` field is optional for this Tokkio-RAG workflow but is needed for the Tokkio-QSR workflow. 
+The `_openai_api_key` is not needed for this Tokkio-RAG workflow but is needed for the Tokkio-QSR workflow.
+
+The `_coturn_password` field is optional if you are using Reverse Proxy as the TURN server.
 
 ### 3. **Prepare Deploy Template**:
 The `deploy-template.yml` file is used to compile the infrastructure specification needed to setup the project/environment.
@@ -93,11 +95,6 @@ After the updates to the `secrets.sh` and `deploy-template.yml`, we can then dep
 bash tokkio-deploy preview
 ```
 This command installs `terraform` to complete the instance provisioning and other steps for the user and shows a preview of the changes staged to be made. 
-
-Make sure the output of the below command matches to where `tokkio-deploy` expects to find `terraform`. 
-```bash 
-which terraform 
-```
 
 Output of `preview` should be in this format:
 
