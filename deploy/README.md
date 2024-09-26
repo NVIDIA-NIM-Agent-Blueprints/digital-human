@@ -94,7 +94,7 @@ After the updates to the `secrets.sh` and `deploy-template.yml`, we can then dep
 ```
 bash tokkio-deploy preview
 ```
-This command installs `terraform` to complete the instance provisioning and other steps for the user and shows a preview of the changes staged to be made. 
+This command installs `terraform` to complete the instance provisioning and other steps for the user and shows a preview of the changes staged to be made.
 
 Output of `preview` should be in this format:
 
