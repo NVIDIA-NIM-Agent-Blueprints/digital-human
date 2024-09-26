@@ -6,7 +6,7 @@ include:
 services:
   chain-server:
     container_name: rag-application-text-chatbot-langchain
-    image: nvcr.io/ohlfw0olaadg/ea-rag-examples/rag-application-text-chatbot-langchain:24.07
+    image: nvcr.io/nvidia/aiworkflows/rag-application-text-chatbot-langchain:24.08
     volumes:
       - ./prompt.yaml:/prompt.yaml
     command: --port 8081 --host 0.0.0.0
@@ -41,22 +41,6 @@ services:
       nemollm-inference:
         condition: service_healthy
         required: false
-
-  rag-playground:
-    container_name: rag-playground
-    image: nvcr.io/ohlfw0olaadg/ea-participants/rag-playground:24.06
-    environment:
-      CHAIN_SERVER: "http://chain-server"
-      CHAIN_SERVER_PORT: "8081"
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
-      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
-      ENABLE_TRACING: false
-    ports:
-      - "3001:3001"
-    expose:
-      - "3001"
-    depends_on:
-      - chain-server
 
 networks:
   default:

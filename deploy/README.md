@@ -300,8 +300,6 @@ A minimum of two NVIDIA datacenter GPUs (such as A100, H100, or L40S models) are
    c42df344bb25   milvus-etcd                             Up 48 minutes (healthy)
    ```
 
-1. Open your browser and interact with the RAG Playground at <http://localhost:3001/orgs/nvidia/models/text-qa-chatbot>.
-
 1. Check out the API specs at <http://localhost:8081/docs>.
 
    > **Note:** Accessing the UI and endpoints: 
@@ -323,11 +321,9 @@ A minimum of two NVIDIA datacenter GPUs (such as A100, H100, or L40S models) are
 
 ## Load Data into the Knowledge Base
 
-There are 3 methods available for adding data to the Retrieval-Augmented Generation (RAG) knowledge base.
+There are 2 methods available for adding data to the Retrieval-Augmented Generation (RAG) knowledge base.
 
-1. Access the RAG Playground at <http://localhost:3001/orgs/nvidia/models/text-qa-chatbot>. In the Knowledge Base section, select "Drag and drop a file" to upload your PDF documents.
-
-1. Alternatively, use the API by sending requests to the `/documents` endpoint at http://localhost:8081/documents. Below is an example cURL command for this method:
+1. Access the API by sending requests to the `/documents` endpoint at http://localhost:8081/documents. Below is an example cURL command for this method:
 
    ```bash
    pathToDocument="/path/to/document.pdf"
@@ -356,15 +352,9 @@ There are 3 methods available for adding data to the Retrieval-Augmented Generat
 
 ## Ask a question!
 
-Now that the knowledge base has been populated, you can engage with the RAG-powered AI assistant in 2 different ways.
+Now that the knowledge base has been populated, you can engage with the RAG-powered AI assistant.
 
-1. Utilize the RAG Playground interface:
-   - Navigate to http://localhost:3001/orgs/nvidia/models/text-qa-chatbot
-   - Locate the Demo section to engage with the conversational AI
-   - To enable RAG functionality, ensure the "Use Knowledge Base" option is selected
-   - To disable RAG, deselect the "Use Knowledge Base" option
-
-1. Use the API by sending requests to the `/generate` endpoint at http://localhost:8081/generate. Below is an example cURL command for this method:
+Use the API by sending requests to the `/generate` endpoint at http://localhost:8081/generate. Below is an example cURL command for this method:
 
    ```bash
    curl -X 'POST' \
