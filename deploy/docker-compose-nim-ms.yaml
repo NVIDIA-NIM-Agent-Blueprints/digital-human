@@ -28,7 +28,7 @@ services:
               # device_ids: ['${LLM_MS_GPU_ID:-0}']
               capabilities: [gpu]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/v1/health/ready"]
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8000/v1/health/ready')"]
       interval: 10s
       timeout: 20s
       retries: 100
