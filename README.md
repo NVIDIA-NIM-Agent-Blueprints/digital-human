@@ -1,122 +1,99 @@
 <h2><img align="center" src="https://github.com/user-attachments/assets/cbe0d62f-c856-4e0b-b3ee-6184b7c4d96f">NIM Agent Blueprint: Digital Human for Customer Service</h2>
+
+The Digital Human for Customer Service NVIDIA NIM™ Agent Blueprint is powered by NVIDIA Tokkio, a workflow based on ACE technologies, to bring enterprise applications to life with a 3D animated digital human interface. With approachable, human-like interactions, customer service applications can provide more engaging user experience compared to traditional customer service options.
+
+This blueprint is powered by a suite of easy to use and performance-optimized NVIDIA NIM<sup>TM<sup> inference microservices, for avatar animation, speech AI, and generative AI.  The avatar is rendered using the Omniverse RTX microservice, animated with the Audio2Face NIM, and has a responsive speech interface with the NVIDIA Riva NIM and ElevenLabs integrations.   
+
+## Why digital humans?
+Digital humans will revolutionize industries from customer service, to advertising and gaming.  The possibilities for digital humans are endless.  With an approachable, human-like interface, customer service applications can provide better user experiences with faster resolutions than generative AI powered applications with just a text or speech interface.  Check out this youtube video. 
+This digital humans blueprint highlights how to use NVIDIA hardware and software to bring the $125B digital human market to life.  80% of conversational offerings will embed generative AI by 2025, up from 20% in 2024*.  And 75% of conversational AI customer-facing business applications will have emotion AI by 2030, up from less than 10% in 2024<sup>*</sup>
+
+* Gartner – Emerging Tech: Navigating the Hurdles of Digital Humans
+
+## About this blueprint
+This blueprint serves as a starting point for a team of developers to showcase how an LLM or a RAG application can be connected to a digital human pipeline. The digital avatar and the Retrieval-Augmented Generation (RAG) applications are deployed separately. 
+
+The RAG application is responsible for generating the text context to question-answer interactions and the digital human live avatar, leverages a Tokkio customer service pipeline. Since these two entities are separated, they communicate with one another using the REST API. Developers can build upon this blueprint, by customizing the RAG application and digital avatar based on their specific use case. 
+
 <p align="center">
  <img width="800" alt="dht" src="https://github.com/user-attachments/assets/64bd6115-035c-4b2f-88d4-ba8f2c2b29ac">
-
 </p>
 
-Create a digital human for customer service that combines NVIDIA NIM, ACE Microservices, Omniverse RTX rendering, and NeMo Retriever.\
-\
-This blueprint repository serves as a starting point for the developers to showcase how an LLM or a RAG application can be easily connected to a digital human pipeline. The digital human and the Retrieval-Augmented Generation (RAG) applications are deployed separately. The RAG application is responsible for generating the text content of the interaction and Tokkio customer service workflow is providing a solution to enable avatar live interaction. Those two entities are separated and communicate using the REST API. The users can develop their requirements and tune the app based on their needs. Included in this workflow are steps to setup and connect both components of the customer service pipeline.
+## Software Components
+The RAG-based AI digital human provides a reference to build an enterprise-ready generative AI solution with minimal effort. It contains the following software components:
+
+* ACE Tokkio Customer Service
+  * 3D Animation Pipeline - [Audio2Face NIM](https://build.nvidia.com/nvidia/audio2face)
+  * Audio Pipeline - [Parakeet-ctc-1.1b.asr NIM](https://build.nvidia.com/nvidia/parakeet-ctc-1_1b-asr) and ElevenLabs TTS
+* Response RAG Generation (Inference)
+  * LLM - [Llama-3-8B-instruct NIM](https://build.nvidia.com/meta/llama3-8b)
+  * NeMo Retriever embedding - [NV-Embed-QA-v5 NIM](https://build.nvidia.com/nvidia/nv-embedqa-e5-v5)
+  * NeMo Retriever reranking - [Rerank-Mistral-4b-v3 NIM](https://build.nvidia.com/nvidia/nv-rerankqa-mistral-4b-v3)
+* RAG Text Retriever - LangChain
+* RAG Unstructured Data (PDF) Ingestion - Milvus Database (Vector GPU-optimized)
+
+## Target audience
+Setting up the digital human pipelines, as well as customization, requires a technical team with expertise in different areas of the software stack.
+
+### Persona-1: Devops engineer
+To deploy this blueprint, you must be comfortable deploying applications/helm charts on Kubernetes, creating resources on cloud service provider platforms and have general deployment expertise.
+
+
+### Persona-2: GenAI developer/ Machine learning engineer
+Since this blueprint will require customization for your specific use case, you should have necessary technical expertise to take the existing blueprint and change it to suit your needs. This includes, but is not limited to changing the RAG pipeline for your specific dataset and fine tuning the LLMs if needed.
+
+NOTE:  Please refer to the customization section for additional information.  
+
+### Persona-3: (Optional) Animation/Rendering developer 
+Tokkio allows you to customize your live avatar with the Avatar Configurator or alternatively you can import a third-party avatar by following the custom avatar guide. More information can be found in the Avatar Customization section. If you are looking to customize the avatar away from the default one then you would need an engineer comfortable in above.
 
 
 ## Get Started
 
-* [Prerequisites](#prerequisites)
-    * Ensure that system requirements are fulfilled.
-    * Setup NVIDIA GPU Cloud (NGC) API key, Cloud Service Provider and SSH Key Pair.
-* [Deploy](/deploy/)
-    * Start by launching the Digital Human Pipeline Deployment to interact with the digital human.
-    * Next, deploy the RAG pipeline to connect the digital human to a knowledge base.
-* [Customize](/customize/) 
-    * Connect your Digital Human Pipeline to domain-adapted RAG.
-    * (Optional) Further customize with Parameter Efficient Fine-Tuning (PEFT) and Low-Rank Adaptation (LoRA).
-* [Evaluate](/evaluate/)
-    * Assess RAG and PEFT using metrics like ROUGE, BLEU, Ragas, and LLM-as-a-judge.
+#### Get Started
+The Digital human blueprint has two components, the digital avatar deployment and the Retrieval Augmented Generation pipeline. 
+
+* [Prerequisites]((#prerequisites))
+* [Deployment](/deploy/)
+* [Customization](/customize/)
+* [Evaluation]((/evaluate/))
+
 
 ## Prerequisites
-### 1. **System Requirements:**
-- Access to an Ubuntu 20.04 or 22.04 based machine, either VM or workstation with sudo privileges for the user to run the automated deployment scripts. 
-- Python version 3.10.12 or later
 
-#### 1.1 **Docker Installation**
-Install [Docker Engine and Docker Compose](https://docs.docker.com/engine/install/ubuntu/).
-#### 1.2 **NVIDIA GPU Driver Version**
-Verify NVIDIA GPU driver version 535 or later is installed.
+* NVIDIA AI Enterprise or Developer License: NVIDIA NIM for LLMs are available for self-hosting under the NVIDIA AI Enterprise (NVAIE) License.
+* Sign up for NVAIE license. An NGC API key is required to access NGC resources.
+  * To obtain a key, navigate to Blueprint experience on NVIDIA API Catalog.
+  * Login / Sign up if needed and "Generate your API Key".
 
-```console
-    $ nvidia-smi --query-gpu=driver_version --format=csv,noheader
-    535.129.03
+### Digital Avatar prerequisites
 
-    $ nvidia-smi -q -d compute
+#### Hardware requirements
+Supported NVIDIA GPU hardware:
 
-    ==============NVSMI LOG==============
+* T4
+* A10
+* L4
+* L40S
 
-    Timestamp                                 : Sun Nov 26 21:17:25 2023
-    Driver Version                            : 535.129.03
-    CUDA Version                              : 12.2
+A minimum of 2 GPUs are required for 1 stream and 4 GPUs for 3 streams. For this blueprint guide, we will deploy the digital avatar pipeline on [AWS](https://docs.aws.amazon.com/dlami/latest/devguide/gpu.html) using a g5.12xlarge machine.  The blueprint requires at least a 8 core CPU, 64GB of system memory and 500GB of disk space.
 
-    Attached GPUs                             : 1
-    GPU 00000000:CA:00.0
-        Compute Mode                          : Default
-```
+NOTE:  If you are setting this up on GCP or Azure. Please checkout the GPU instance types for the corresponding providers. 
 
-   Refer to the [NVIDIA Linux driver installation instructions](https://docs.nvidia.com/datacenter/tesla/tesla-installation-notes/index.html) for more information.
-#### 1.3 **NVIDIA Container Toolkit**
-   Install the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
+#### System requirements
+Ubuntu 20.04 or 22.04 based machine, with sudo privileges for the user to run the automated deployment scripts.
 
-   Verify the toolkit is installed and configured as the default container runtime.
+NOTE:  In an upcoming step, you will use one click scripts in the Digital Avatar deployment instructions to set up everything else.
 
-```console
-    $ cat /etc/docker/daemon.json
-    {
-        "default-runtime": "nvidia",
-        "runtimes": {
-            "nvidia": {
-                "path": "/usr/bin/nvidia-container-runtime",
-                "runtimeArgs": []
-            }
-        }
-    }
+### Retrieval Augmented Generation (RAG) pipeline prerequisites
+#### Hardware requirements
 
-    $ sudo docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi -L
-    GPU 0: NVIDIA A100 80GB PCIe (UUID: GPU-d8ce95c1-12f7-3174-6395-e573163a2ace)
-```
+* Option 1: RAG without customization
+To familiarize yourself with the digital human blueprint, you can leverage a non-GPU accelerated AWS EC2 instance.  By default, the blueprint uses the NVIDIA API Catalog hosted endpoints for LLM, embedding and reranking models.  Therefore all that is required is an instance with at least 8 cores and 64GB memory.  A public IP address is also required to connect to the digital human avatar.
 
-#### 1.4 **GPU Requirements**
-For minimum GPU requirements, refer to:  https://build.nvidia.com/nvidia/digital-humans-for-customer-service/blueprintcard
 
-### 2. **NVIDIA GPU Cloud (NGC) API key:**
-NGC API Key is required to access resources within this repository. 
-1. Navigate to https://build.nvidia.com/nvidia/digital-humans-for-customer-service and click "Download Blueprint"
-2. Login / Sign up if needed and "Generate your API Key"
-3. Use this API Key as credentials for "NGC_API_KEY"
-4. Log in to the NVIDIA container registry using the following command:
+* Option-2: RAG with customization
+Once you familiarize yourself with the blueprint, you may want to further customize based upon your own use case which requires you to host your own LLM, embedding and reranking models.  In this case you will need access to a GPU accelerated AWS EC2 instance with 8 cores, 64GB memory and 2X A100 or L40s GPUs.  For this option, deploy the RAG pipeline on AWS using a g5.12xlarge machine.  A public IP address is required to connect to the digital human avatar.
 
-    ```console
-    docker login nvcr.io
-    ```
-
-    Once prompted, you can use `$oauthtoken` as the username and your `NGC_API_Key` as the password.
-
-    Then, export the `NGC_API_KEY`
-
-   ```console
-   export NGC_API_KEY=<ngc-api-key>
-   ```
-
-Refer to [Accessing And Pulling an NGC Container Image via the Docker CLI](https://docs.nvidia.com/ngc/gpu-cloud/ngc-catalog-user-guide/index.html#accessing_registry) for more information.
-
-### 3. **Cloud Service Provider Setup:**
-The Digital human for customer service blueprint includes easy deployment scripts for major cloud service providers, it is recommended to have CSP secrets handy to deploy the digital human application. The RAG application can be deployment locally with docker compose using provided customization and deployment scripts.
-
-We will cover the digital human application setup and deployment steps for [AWS](https://docs.nvidia.com/ace/latest/workflows/tokkio/text/Tokkio_AWS_CSP_Setup_Guide_automated.html#). The Setup for other CSPs can be found [here](https://docs.nvidia.com/ace/latest/workflows/tokkio/index.html#csp-setup-guides).
-
-We will be leveraging the one-click aws deployment script for deployment that automates and abstracts out complexities and completes the AWS instance provisioning, setup and deployment of our application.
-#### 3.1 **Digital Human Application - AWS Setup**:
-Follow the [AWS CSP Setup Guide](https://docs.nvidia.com/ace/latest/workflows/tokkio/text/Tokkio_AWS_CSP_Setup_Guide_automated.html#prerequisites) to configure your AWS environment for the Tokkio application.
-
-After going through the provisioning steps, you should have the following credentials:
-- **AWS Access Keys for IAM user:** This procurement will give the `Access key ID` and `Secret access key` credentials. Refer to the [AWS Documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) for detailed instructions.
-- **S3 Bucket:** Private S3 bucket to store the references to the resources the one-click deploy script will spin up.
-- **DynamoDB Table:** To manage access to the deployment state.
-- **Domain and Route53 hosted zone:** To deploy the application under.
-
-### 4. **SSH Key Pair:**
-This is needed to access the instances we are going to setup. On the local Ubuntu based machine you may use existing SSH key pair or create a new [SSH key pair](https://help.ubuntu.com/community/SSH/OpenSSH/Keys#Generating_RSA_Keys):
-```bash
-ssh-keygen -t rsa -b 4096
-```
-This should generate a public and private SSH key pair. The public key should be available as `.ssh/id_rsa.pub` and the private key would be then available as `.ssh/id_rsa` in your home folder as well. These keys will be needed to setup your one-click deployment of the [Digital Human Pipeline](./deploy/README.md#digital-human-pipeline-deployment). 
-
-# Next Steps
-After ensuring all the prerequisites are satisfied, please proceed to the [Digital Human Pipeline Deployment](/deploy/#contents) and [RAG Pipeline Deployment](/deploy/#contents).
+#### System requirements
+Ubuntu 20.04 or 22.04 based machine, with sudo privileges
