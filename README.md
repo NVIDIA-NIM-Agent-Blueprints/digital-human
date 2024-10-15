@@ -2,7 +2,7 @@
 
 The Digital Human for Customer Service NVIDIA NIM™ Agent Blueprint is powered by NVIDIA Tokkio, a workflow based on ACE technologies, to bring enterprise applications to life with a 3D animated digital human interface. With approachable, human-like interactions, customer service applications can provide more engaging user experience compared to traditional customer service options.
 
-This blueprint is powered by a suite of easy to use and performance-optimized NVIDIA NIM<sup>TM<sup> inference microservices, for avatar animation, speech AI, and generative AI.  The avatar is rendered using the Omniverse RTX microservice, animated with the Audio2Face NIM, and has a responsive speech interface with the NVIDIA Riva NIM and ElevenLabs integrations.   
+This blueprint is powered by a suite of easy to use and performance-optimized NVIDIA NIM<sup>TM</sup> inference microservices, for avatar animation, speech AI, and generative AI.  The avatar is rendered using the Omniverse RTX microservice, animated with the Audio2Face NIM, and has a responsive speech interface with the NVIDIA Riva NIM and ElevenLabs integrations.   
 
 ## Why digital humans?
 Digital humans will revolutionize industries from customer service, to advertising and gaming.  The possibilities for digital humans are endless.  With an approachable, human-like interface, customer service applications can provide better user experiences with faster resolutions than generative AI powered applications with just a text or speech interface.  Check out this youtube video. 
