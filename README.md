@@ -66,7 +66,7 @@ The Digital human blueprint has two components, the digital avatar deployment an
   * To obtain a key, navigate to Blueprint experience on NVIDIA API Catalog.
   * Login / Sign up if needed and "Generate your API Key".
 
-### Digital Avatar prerequisites
+### Digital Avatar
 
 #### Hardware requirements
 Supported NVIDIA GPU hardware:
@@ -85,7 +85,7 @@ Ubuntu 20.04 or 22.04 based machine, with sudo privileges for the user to run th
 
 NOTE:  In an upcoming step, you will use one click scripts in the Digital Avatar deployment instructions to set up everything else.
 
-### Retrieval Augmented Generation (RAG) pipeline prerequisites
+### Retrieval Augmented Generation (RAG) pipeline
 #### Hardware requirements
 
 * Option 1: RAG without customization
