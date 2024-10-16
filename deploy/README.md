@@ -267,7 +267,7 @@ You're ready to interact with your Avatar!
 
 Follow the steps [here](https://github.com/NVIDIA/GenerativeAIExamples/tree/main/RAG/examples/basic_rag/langchain) to set up the RAG pipeline on the other AWS instance.
 
-## Connect your gigital human avatar to domain adapted RAG
+## Connect your digital human avatar to domain adapted RAG
 
 Now that you have deployed the digital avatar and the Retrieval-Augmented Generation (RAG) application, the next step is to connect the two pipelines so that they can communicate with one another using the REST API. To do this, we will point the Digital Avatar application to our RAG Server endpoint by doing a helm upgrade.  To do this, we will first pull a helm to update the values.yaml.
 
