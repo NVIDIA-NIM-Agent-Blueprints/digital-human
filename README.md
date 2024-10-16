@@ -5,10 +5,9 @@ The Digital Human for Customer Service NVIDIA NIM™ Agent Blueprint is powered 
 This blueprint is powered by a suite of easy to use and performance-optimized NVIDIA NIM<sup>TM</sup> inference microservices, for avatar animation, speech AI, and generative AI.  The avatar is rendered using the Omniverse RTX microservice, animated with the Audio2Face NIM, and has a responsive speech interface with the NVIDIA Riva NIM and ElevenLabs integrations.   
 
 ## Why digital humans?
-Digital humans will revolutionize industries from customer service, to advertising and gaming.  The possibilities for digital humans are endless.  With an approachable, human-like interface, customer service applications can provide better user experiences with faster resolutions than generative AI powered applications with just a text or speech interface.  Check out this youtube video. 
-This digital humans blueprint highlights how to use NVIDIA hardware and software to bring the $125B digital human market to life.  80% of conversational offerings will embed generative AI by 2025, up from 20% in 2024*.  And 75% of conversational AI customer-facing business applications will have emotion AI by 2030, up from less than 10% in 2024<sup>*</sup>
+Digital humans will revolutionize industries from customer service, to advertising and gaming.  The possibilities for digital humans are endless.  With an approachable, human-like interface, customer service applications can provide better user experiences with faster resolutions than generative AI powered applications with just a text or speech interface.  Check out this youtube video. This digital humans blueprint highlights how to use NVIDIA hardware and software to bring the $125B digital human market to life.  80% of conversational offerings will embed generative AI by 2025, up from 20% in 2024*.  And 75% of conversational AI customer-facing business applications will have emotion AI by 2030, up from less than 10% in 2024<sup>*</sup>
 
-* Gartner – Emerging Tech: Navigating the Hurdles of Digital Humans
+\*Gartner – Emerging Tech: Navigating the Hurdles of Digital Humans
 
 ## About this blueprint
 This blueprint serves as a starting point for a team of developers to showcase how an LLM or a RAG application can be connected to a digital human pipeline. The digital avatar and the Retrieval-Augmented Generation (RAG) applications are deployed separately. 
@@ -88,11 +87,10 @@ NOTE:  In an upcoming step, you will use one click scripts in the Digital Avatar
 ### Retrieval Augmented Generation (RAG) pipeline
 #### Hardware requirements
 
-* Option 1: RAG without customization
+##### Option 1: RAG without customization
 To familiarize yourself with the digital human blueprint, you can leverage a non-GPU accelerated AWS EC2 instance.  By default, the blueprint uses the NVIDIA API Catalog hosted endpoints for LLM, embedding and reranking models.  Therefore all that is required is an instance with at least 8 cores and 64GB memory.  A public IP address is also required to connect to the digital human avatar.
 
-
-* Option-2: RAG with customization
+##### Option-2: RAG with customization
 Once you familiarize yourself with the blueprint, you may want to further customize based upon your own use case which requires you to host your own LLM, embedding and reranking models.  In this case you will need access to a GPU accelerated AWS EC2 instance with 8 cores, 64GB memory and 2X A100 or L40s GPUs.  For this option, deploy the RAG pipeline on AWS using a g5.12xlarge machine.  A public IP address is required to connect to the digital human avatar.
 
 #### System requirements
