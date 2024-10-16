@@ -52,7 +52,7 @@ Tokkio allows you to customize your live avatar with the Avatar Configurator or 
 #### Get Started
 The Digital human blueprint has two components, the digital avatar deployment and the Retrieval Augmented Generation pipeline. 
 
-* [Prerequisites]((#prerequisites))
+* [Prerequisites](#prerequisites)
 * [Deployment](/deploy/)
 * [Customization](/customize/)
 * [Evaluation]((/evaluate/))
