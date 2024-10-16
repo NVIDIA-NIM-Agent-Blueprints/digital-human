@@ -87,10 +87,10 @@ NOTE:  In an upcoming step, you will use one click scripts in the Digital Avatar
 ### Retrieval Augmented Generation (RAG) pipeline
 #### Hardware requirements
 
-##### Option 1: RAG without customization**
+##### Option 1: RAG without customization
 To familiarize yourself with the digital human blueprint, you can leverage a non-GPU accelerated AWS EC2 instance.  By default, the blueprint uses the NVIDIA API Catalog hosted endpoints for LLM, embedding and reranking models.  Therefore all that is required is an instance with at least 8 cores and 64GB memory.  A public IP address is also required to connect to the digital human avatar.
 
-##### Option-2: RAG with customization**
+##### Option-2: RAG with customization
 Once you familiarize yourself with the blueprint, you may want to further customize based upon your own use case which requires you to host your own LLM, embedding and reranking models.  In this case you will need access to a GPU accelerated AWS EC2 instance with 8 cores, 64GB memory and 2X A100 or L40s GPUs.  For this option, deploy the RAG pipeline on AWS using a g5.12xlarge machine.  A public IP address is required to connect to the digital human avatar.
 
 #### System requirements
