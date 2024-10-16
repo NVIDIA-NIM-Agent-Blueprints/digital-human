@@ -1,28 +1,49 @@
-# Contents
-- [Digital Human Pipeline Deployment](#digital-human-pipeline-deployment)
-- [RAG Pipeline Deployment](#rag-pipeline-deployment)
+# Deployment
 
-# Digital Human Pipeline Deployment
+**Persona needed**: Devops Engineer
+
+For this guide, we will deploy the Digital human avatar and the Retrieval Augmented Generation pipeline on separate AWS instances. 
+NOTE:  The deployment for other CSPs can be found [here](https://docs.nvidia.com/ace/latest/workflows/tokkio/index.html#csp-setup-guides). 
+
+The digital avatar deployment uses a one-click AWS deployment script that automates and abstracts out complexities and completes the AWS instance provisioning, setup and deployment of our application.  It is recommended to have CSP secrets handy to deploy the digital human avatar. 
+
+Note: For deploying RAG with customization, please take a look at the customization(../customize/) section of this guide
+
+
+## Digital Human Pipeline Deployment
 
 For this workflow, we will be leveraging [NVIDIA ACE](https://developer.nvidia.com/ace) - a suite of technologies for bringing digital humans to life with generative AI.
 
-This guide provides step-by-step instructions to set up and deploy the [Digital Human Pipeline](https://docs.nvidia.com/ace/latest/workflows/tokkio/text/Tokkio_LLM_RAG_Bot.html) workflow using the NVIDIA ACE repository.
-
-## Sections
 - [Prerequisites](#prerequisites)
 - [Setup for Deployment](#setup-for-deployment)
 - [Deploy Infrastructure and Application](#deploy-infrastucture-and-application)
 - [Verify the Deployment and UI](#verify-the-deployment-and-ui)
 
-## Prerequisites
-Refer to the [Prerequisite Section](../README.md#prerequisites) to confirm the prerequisites are setup correctly. Refer to the [AWS Setup Guide](https://docs.nvidia.com/ace/latest/workflows/tokkio/text/Tokkio_AWS_CSP_Setup_Guide_automated.html#) as well.
+#### Prerequisites
+
+### SSH Key Pair setup
+Next, you will need to create an SSH Key Pair, this is needed to access the E2c instances. On a local Ubuntu based machine you may use existing SSH key pair or create a new SSH key pair:
+
+   ```bash
+   ssh-keygen -t rsa -b 4096
+   ```
+This should generate a public and private SSH key pair. The public key should be available as .ssh/id_rsa.pub and the private key would be then available as `.ssh/id_rsa` in your home folder as well. These keys will be needed to set up your one-click deployment of the Digital Human Pipeline.
+
+Refer to the [AWS Setup Guide](https://docs.nvidia.com/ace/latest/workflows/tokkio/text/Tokkio_AWS_CSP_Setup_Guide_automated.html#prerequisites) as well.
+
+After completing the above prereqs, verify that you have the following credentials:
+
+* AWS Access Keys for IAM user
+* S3 Bucket: Private S3 bucket to store the references to the resources the one-click deploy script will spin up.
+* DynamoDB Table: To manage access to the deployment state.
+* Domain and Route53 hosted zone: To deploy the application under.
 
 We will be leveraging the one-click AWS deployment script for deployment that automates and abstracts out complexities and completes the AWS instance provisioning, setup and deployment of our application.
 
-## Setup for Deployment
+### Setup for Deployment
 Ensure you have access to an Ubuntu 20.04 or 22.04 based machine, either VM or workstation with sudo privileges for the user to run the automated deployment scripts.
 
-### 1. **Download and Extract Deployment Artifacts**:
+#### 1. **Download and Extract Deployment Artifacts**:
 On your local Ubuntu based system, Clone the ACE Repository and navigate to one-click script for AWS. 
    ```bash
    git clone https://github.com/NVIDIA/ACE.git
@@ -38,7 +59,7 @@ This directory has our the deployment terraform scripts and `secrets.sh` for com
 
    ```
 
-### 2. **Update Secrets**:
+#### 2. **Update Secrets**:
 Modify the `secrets.sh` file with the AWS Access keys and other necessary secrets generated in the previous step.
 
    ```bash
@@ -52,7 +73,7 @@ The `_openai_api_key` is not needed for this Tokkio-RAG workflow but is needed f
 
 The `_coturn_password` field is optional if you are using Reverse Proxy as the TURN server.
 
-### 3. **Prepare Deploy Template**:
+#### 3. **Prepare Deploy Template**:
 The `deploy-template.yml` file is used to compile the infrastructure specification needed to setup the project/environment.
 
 You can have multiple template files and create multiple unique environments per template file that are identified by the unique ID `project_name`.
@@ -88,7 +109,7 @@ For further explanations of all the entries in this yaml file, please refer to t
 
 You can find example `deploy-template.yml` files in the [ACE Repository](https://github.com/NVIDIA/ACE/tree/main/workflows/tokkio/scripts/one-click/aws/examples).
 
-## **Deploy Infrastructure and Application**
+### **Deploy Infrastructure and Application**
 After the updates to the `secrets.sh` and `deploy-template.yml`, we can then deploy the tokkio-llm app. 
 
 ```
@@ -153,7 +174,7 @@ bash tokkio-deploy install
 ```
 ***
 
-## **Verify the Deployment and UI**:
+### **Verify the Deployment and UI**:
 On successful deployment of the Infra, you will get output displayed in the below format:
 
 ```
@@ -242,142 +263,140 @@ app_infra = {
 Access UI at `https://<ui_sub_domain>.<base_domain>`
 You're ready to interact with your Avatar!
 
-# RAG Pipeline Deployment
+## RAG Pipeline Deployment
 
-This example showcases a LangChain based RAG pipeline that deploys the NIM for LLMs microservice to host a TensorRT optimized LLM and the NeMo Retriever Embedding microservice. Milvus is deployed as the vector database to store embeddings and generate responses to queries.
+Follow the steps [here](https://github.com/NVIDIA/GenerativeAIExamples/tree/main/RAG/examples/basic_rag/langchain) to set up the RAG pipeline on the other AWS instance.
 
-The knowledge base used in this RAG deployment is based on the [O-RAN (Open Radio Access Network) ALLIANCE](https://www.o-ran.org) specifications. These specifications define open, interoperable standards and interfaces that transform traditional radio access networks into more flexible, virtualized, and cloud-native systems. The technical documentation (PDFs) of these specifications can be found [here](https://specifications.o-ran.org/specifications). For this example, you should download these PDFs into the `./data` directory. However, this pipeline is flexible and can also be used with other data from different domains or your own data for RAG.
+## Connect your gigital human avatar to domain adapted RAG
 
-By default, this RAG deployment uses `meta/llama3-8b-instruct` without PEFT. If you [customized the model with PEFT and LoRA](../customize/rag_peft.md), make sure to update `LLM_MODEL_NAME` to `lora-nemo-fw` in the `.env` file to use the LoRA weights.
+Now that you have deployed the digital avatar and the Retrieval-Augmented Generation (RAG) application, the next step is to connect the two pipelines so that they can communicate with one another using the REST API. To do this, we will point the Digital Avatar application to our RAG Server endpoint by doing a helm upgrade.  To do this, we will first pull a helm to update the values.yaml.
 
-## Sections
-- [Prerequisites](#prerequisites-1)
-- [Deploy the RAG Pipeline](#deploy-the-rag-pipeline)
-- [Load Data into the Knowledge Base](#load-data-into-the-knowledge-base)
-- [Ask a question!](#ask-a-question)
+From the previous section, we can have our ORAN RAG Server running at `http://localhost:8081` or if using an AWS EC2 instance to deploy it can be running somewhere like `http://52.39.xx.xx:8081`
 
-## Prerequisites
+With your baseline Avatar UI setup running on the AWS instance and functioning properly, we now need to point the app to our RAG Server endpoint by doing a `helm upgrade`.
 
-A minimum of two NVIDIA datacenter GPUs (such as A100, H100, or L40S models) are required.
-- One GPU is needed for the inference container.
-- One GPU is needed for the embedding container.
-- In addition, Milvus requires at least one GPU by default.
+### 1. **Fetch the Helm Chart**:
+On the AWS Instance, first verify that all the pods are up and running.
+```
+kubectl get pods
+```
+We can then fetch the `ucs-tokkio-audio-video-llm-app` from NVIDIA GPU Cloud.
+```bash
+helm fetch https://helm.ngc.nvidia.com/nvidia/ucs-ms/charts/ucs-tokkio-audio-video-llm-app-4.1.0.tgz
+```
+### 2. **Extract the Chart Package**:
+```bash
+tar -xzf ucs-tokkio-audio-video-llm-app-4.1.0.tgz
 
-## Deploy the RAG Pipeline
+#Files inside the app
+cd ucs-tokkio-audio-video-llm-app/
+ls -l
+    app_info.yaml
+    Chart.yaml
+    values.yaml
+  
+```
 
-1. Complete the [Common Prerequisites](../README.md#common-prerequisites). 
+### 3. **Edit the Values File to add RAG Endpoint**:
 
-1. Log in to the NVIDIA container registry using the following command:
+Make a copy of the `values.yaml` > `new_values.yaml`
 
-    ```console
-    docker login nvcr.io
-    ```
+```bash
+cp values.yaml new_values.yaml
 
-    Once prompted, you can use `$oauthtoken` as the username and your `NGC_API_Key` as the password.
+#make edits to the file
+nano new_values.yaml
+```
 
-    Then, export the `NGC_API_KEY`
+In the `new_values.yaml` file, update the `RAG_ENDPOINT` under `ace-agent-plugin-server` section:
 
-   ```console
-   export NGC_API_KEY=<ngc-api-key>
-   ```
+```bash
+ace-agent-plugin-server:
+  applicationSpecs:
+    deployment:
+      containers:
+        container:
+          env:
+          - name: HOME
+            value: /bot
+          - name: RAG_ENDPOINT
+            value: http://52.39.xx.xx:8081
+  configNgcPath: nvidia/ucs-ms/tokkio_plugin_llm_rag:4.0.1
+```
+Also, update the RAG Server Address and Port under `egress` for `ace-agent-plugin-server`:
+```bash
+  egress:
+    rag-server:
+      address: 52.39.xx.xx
+      port: 8081
+```
+**Note**: Make sure the RAG endpoint is accessible from Tokkio ec2 instance. If the RAG endpoint was deployed on an ec2 machine this can be done by <a href="https://docs.aws.amazon.com/finspace/latest/userguide/step5-config-inbound-rule.html">updating</a> the <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html">security groups.</a> 
 
-1. Deploy the RAG pipeline.
+### 4. **Upgrade the Helm Release**:
+Apply the changes to reflect in your already deployed helm chart by upgrading the Helm release with the `new_values.yaml` file.
 
-   ```console
-   USERID=$(id -u) docker compose --profile local-nim --profile milvus up -d
-   ```
+```bash
+helm upgrade --values <path_to_new_values.yaml> <release_name> <chart_name>
+```
+You can get the chart name and release name by using `helm ls` on your instance. 
 
-   <i>Example Output</i>
+Example helm upgrade command:
 
-   ```console
-   CONTAINER ID   NAMES                                   STATUS
-   32515fcb8ad2   rag-playground                          Up 26 minutes
-   d60e0cee49f7   rag-application-text-chatbot-langchain  Up 27 minutes
-   02c8062f15da   nemo-retriever-embedding-microservice   Up 27 minutes (healthy)
-   7bd4d94dc7a7   nemollm-inference-microservice          Up 27 minutes
-   55135224e8fd   milvus-standalone                       Up 48 minutes (healthy)
-   5844248a08df   milvus-minio                            Up 48 minutes (healthy)
-   c42df344bb25   milvus-etcd                             Up 48 minutes (healthy)
-   ```
+```bash
+helm upgrade --values ucs-tokkio-audio-video-llm-app/new_values.yaml tokkio-app ucs-tokkio-audio-video-llm-app
+```
 
-1. Check out the API specs at <http://localhost:8081/docs>.
+### 5. **Verify the Deployment**:
+Check that all pods are up and running to ensure the deployment was successful.
 
-   > **Note:** Accessing the UI and endpoints: 
-   >
-   > The examples in this documentation use `localhost:port` to access the UI and endpoints.
-   >
-   > If you are running the application on a remote machine:
-   >
-   > - You may need to set up port forwarding to access the services on your local machine. Open a Terminal on your local machine and use the following command to set up port forwarding:
-   >
-   >   ```
-   >   ssh -L local_port:localhost:remote_port username@remote_host
-   >   ```
-   >
-   > - Alternatively, replace `localhost` with the actual IP address of the remote machine.
-   >   For example: If the remote machine's IP is `12.34.56.78`, use `12.34.56.78:port` instead of `localhost:port`.
-   >
-   > Ensure you have the necessary permissions and have configured any relevant firewalls or security groups to allow access to the specified ports.
+```bash
+ubuntu@ip-10-0-0-135:~$  kubectl get pods
+NAME                                                        READY   STATUS    RESTARTS   AGE
+a2f-a2f-deployment-6d9f4d6ddd-n6gc9                         1/1     Running   0          71m
+ace-agent-chat-controller-deployment-0                      1/1     Running   0          71m
+ace-agent-chat-engine-deployment-687b4868c-dx7z8            1/1     Running   0          71m
+ace-agent-plugin-server-deployment-7f7b7f848f-58l9z         1/1     Running   0          71m
+anim-graph-sdr-envoy-sdr-deployment-5c9c8d58c6-dh7qx        3/3     Running   0          71m
+chat-controller-sdr-envoy-sdr-deployment-77975fc6bf-tw9b4   3/3     Running   0          71m
+ds-sdr-envoy-sdr-deployment-79676f5775-64knd                3/3     Running   0          71m
+ds-visionai-ds-visionai-deployment-0                        2/2     Running   0          71m
+ia-animation-graph-microservice-deployment-0                1/1     Running   0          71m
+ia-omniverse-renderer-microservice-deployment-0             1/1     Running   0          71m
+ia-omniverse-renderer-microservice-deployment-1             1/1     Running   0          71m
+ia-omniverse-renderer-microservice-deployment-2             1/1     Running   0          71m
+mongodb-mongodb-bc489b954-jw45w                             1/1     Running   0          71m
+occupancy-alerts-api-app-cfb94cb7b-lnnff                    1/1     Running   0          71m
+occupancy-alerts-app-5b97f578d8-wtjws                       1/1     Running   0          71m
+redis-redis-5cb5cb8596-gncxk                                1/1     Running   0          71m
+redis-timeseries-redis-timeseries-55d476db56-2shpt          1/1     Running   0          71m
+renderer-sdr-envoy-sdr-deployment-5d4d99c778-qm8sz          3/3     Running   0          71m
+riva-speech-57dbbc9dbf-dmzpp                                1/1     Running   0          71m
+tokkio-cart-manager-deployment-55476f746b-7xbrg             1/1     Running   0          71m
+tokkio-ingress-mgr-deployment-7cc446758f-bz6kz              3/3     Running   0          71m
+tokkio-menu-api-deployment-748c8c6574-z8jdz                 1/1     Running   0          71m
+tokkio-ui-server-deployment-55fcbdd9f4-qwmtw                1/1     Running   0          71m
+tokkio-umim-action-server-deployment-74977db6d6-sp682       1/1     Running   0          71m
+triton0-766cdf66b8-6dsmq                                    1/1     Running   0          71m
+vms-vms-bc7455786-6w7cz                                     1/1     Running   0          71m
+```
 
-## Load Data into the Knowledge Base
+### 6. **Spin up the UI**:
+Navigate to the UI using the URL provided in the deployment output to interact with the updated Tokkio-ORAN Digital Human Avatar.
 
-There are 2 methods available for adding data to the Retrieval-Augmented Generation (RAG) knowledge base.
+`https://<ui_sub_domain>.<base_domain>`
 
-1. Access the API by sending requests to the `/documents` endpoint at http://localhost:8081/documents. Below is an example cURL command for this method:
+You're ready to ask ORAN questions to your Avatar!
 
-   ```bash
-   pathToDocument="/path/to/document.pdf"
+Here are sample questions to test your Avatar's O-RAN knowledge:
 
-   curl -X 'POST' \
-   'http://localhost:8081/documents' \
-   -H 'accept: application/json' \
-   -H 'Content-Type: multipart/form-data' \
-   -F "file=@${pathToDocument};type=application/pdf"
-   ```
+```
+Question 1: List the LLS configurations for O-RAN S-plane.
 
-   To batch upload documents, `data_loader.sh` is provided. This script is designed to upload multiple PDF files from a specified directory to a server endpoint in one go. By default, it assumes that the documents are located in the `./data` directory, but you can easily modify the script to use any directory of your choice.
-
-   ```bash
-   chmod +x data_loader.sh
-   ./data_loader.sh
-   ```
-
-1. A third option is to use the provided data loader in `data_loader.ipynb`. This method requires installation of the `requests` library via pip:
-
-   ```bash
-   pip install requests
-   ```
-
-   This notebook includes examples for uploading both individual documents and entire directories of PDFs.
-
-## Ask a question!
-
-Now that the knowledge base has been populated, you can engage with the RAG-powered AI assistant.
-
-Use the API by sending requests to the `/generate` endpoint at http://localhost:8081/generate. Below is an example cURL command for this method:
-
-   ```bash
-   curl -X 'POST' \
-   'http://localhost:8081/generate' \
-   -H 'accept: application/json' \
-   -H 'Content-Type: application/json' \
-   -d '{
-   "messages": [
-      {
-         "role": "user",
-         "content": "I am going to Paris, what should I see?"
-      }
-   ],
-   "use_knowledge_base": true,
-   "temperature": 0.2,
-   "top_p": 0.7,
-   "max_tokens": 1024,
-   "stop": []
-   }'
-   ```
-
-   To enable RAG functionality, set `"use_knowledge_base": true` as shown in the example above. Set it to `false` to disable RAG.
-
-# Next Steps
-
-After launching both the Digital Human Pipeline and RAG Pipeline, proceed to [Connecting Your Digital Human Pipeline to Domain Adapted RAG](../customize/README.md#connect-your-digital-human-pipeline-to-domain-adapted-rag).
+Answer:
+The LLS (Lower Layer Split) configurations for S-plane are as follows:
+1. LLS-C1: This configuration is generally the main synchronization option for a direct connection between O-DU (Open RAN Distributed Unit) and O-RU (Open RAN Radio Unit). It may also be considered as an alternative or complement to LLS-C4 in certain deployment scenarios.
+2. LLS-C2: This configuration, along with LLS-C3, is used for fronthaul focused tests for S-Plane in the current version of the specification. These tests use the ITU-T G.8275.1 profile, which supports Full Timing Support. However, LLS-C2 is not specifically mentioned as a main sync option for a direct connection between O-DU and O-RU.
+3. LLS-C3: Similar to LLS-C2, this configuration is also used for fronthaul focused tests for S-Plane in the current version of the specification. It supports Full Timing Support along with LLS-C2 when using the ITU-T G.8275.1 profile. It is also one of the configurations mentioned for certain deployment scenarios, like the synchronization network between O-DU and O-RU.
+4. LLS-C4: This configuration is considered for future versions of the specification and is mentioned as an alternative or complement to LLS-C1 or LLS-C2/LLS-C3. It is also seen as a main sync option for a direct connection between O-DU and O-RU, as well as for the synchronization network between O-DU and O-RU. However, testing the S-Plane with LLS-C4 is still under future study.
+It's important to note that the applicability of each LLS configuration depends on the specific O-RAN deployment scenario.
+```
