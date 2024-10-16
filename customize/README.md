@@ -67,4 +67,59 @@ Here is a synthetic data point as an example:
 
 You can also curate your own customization dataset, and use it for the fine-tuning based on your specific use case.
 
-Note: If you finetuned the model, follow these steps to deploy it locally on you RAG instance
+Note: If you finetuned the model, follow these steps below to deploy it on your local RAG instance
+
+
+1. Log in to the NVIDIA container registry using the following command:
+
+    ```console
+    docker login nvcr.io
+    ```
+
+    Once prompted, you can use `$oauthtoken` as the username and your `NGC_API_Key` as the password.
+
+    Then, export the `NGC_API_KEY`
+
+   ```console
+   export NGC_API_KEY=<ngc-api-key>
+   ```
+
+1. Deploy the RAG pipeline.
+
+   ```console
+   cd digital-human/deploy/
+   USERID=$(id -u) docker compose --profile local-nim --profile milvus up -d
+   ```
+
+   <i>Example Output</i>
+
+   ```console
+   CONTAINER ID   NAMES                                   STATUS
+   32515fcb8ad2   rag-playground                          Up 26 minutes
+   d60e0cee49f7   rag-application-text-chatbot-langchain  Up 27 minutes
+   02c8062f15da   nemo-retriever-embedding-microservice   Up 27 minutes (healthy)
+   7bd4d94dc7a7   nemollm-inference-microservice          Up 27 minutes
+   55135224e8fd   milvus-standalone                       Up 48 minutes (healthy)
+   5844248a08df   milvus-minio                            Up 48 minutes (healthy)
+   c42df344bb25   milvus-etcd                             Up 48 minutes (healthy)
+   ```
+
+1. Check out the API specs at <http://localhost:8081/docs>.
+
+   > **Note:** Accessing the UI and endpoints: 
+   >
+   > The examples in this documentation use `localhost:port` to access the UI and endpoints.
+   >
+   > If you are running the application on a remote machine:
+   >
+   > - You may need to set up port forwarding to access the services on your local machine. Open a Terminal on your local machine and use the following command to set up port forwarding:
+   >
+   >   ```
+   >   ssh -L local_port:localhost:remote_port username@remote_host
+   >   ```
+   >
+   > - Alternatively, replace `localhost` with the actual IP address of the remote machine.
+   >   For example: If the remote machine's IP is `12.34.56.78`, use `12.34.56.78:port` instead of `localhost:port`.
+   >
+   > Ensure you have the necessary permissions and have configured any relevant firewalls or security groups to allow access to the specified ports.
+
